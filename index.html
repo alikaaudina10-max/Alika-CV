@@ -10,6 +10,7 @@
             --spotify-black: #191414;
             --spotify-purple: #480048;
             --spotify-pink: #C04848;
+            --spotify-blue: #2d46b9;
         }
 
         body, html {
@@ -33,7 +34,7 @@
             position: relative;
         }
 
-        /* Navigasi Sentuh (Kiri & Kanan) */
+        /* Navigasi Sentuh */
         .nav-overlay {
             position: absolute;
             top: 0;
@@ -45,7 +46,7 @@
         .nav-left { left: 0; }
         .nav-right { right: 0; }
 
-        /* Progress Bar Atas */
+        /* Progress Bar Utama Atas */
         .progress-container {
             position: absolute;
             top: 15px;
@@ -69,10 +70,10 @@
             width: 0%;
         }
 
-        /* TOMBOL ULANGI - Pojok Kiri Atas */
+        /* Tombol Ulangi */
         .btn-reset {
             position: absolute;
-            top: 35px; /* Di bawah progress bar */
+            top: 35px;
             left: 20px;
             background: rgba(255, 255, 255, 0.2);
             color: white;
@@ -82,14 +83,12 @@
             font-size: 0.75rem;
             font-weight: bold;
             cursor: pointer;
-            z-index: 150; /* Di atas segalanya */
+            z-index: 150;
             backdrop-filter: blur(5px);
-            transition: 0.3s;
             display: flex;
             align-items: center;
             gap: 5px;
         }
-        .btn-reset:hover { background: rgba(255, 255, 255, 0.4); }
 
         /* Slide Content */
         .slide {
@@ -121,7 +120,6 @@
 
         h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--spotify-green); line-height: 1.1; font-weight: 900; }
         h2 { font-size: 1.4rem; opacity: 0.9; margin: 5px 0; }
-        p { font-size: 1rem; line-height: 1.4; margin: 8px 0; }
 
         .stat-box {
             background: rgba(0, 0, 0, 0.6);
@@ -135,29 +133,32 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .highlight { color: var(--spotify-green); font-weight: bold; }
-
-        .footer-hint {
-            position: absolute;
-            bottom: 30px;
-            font-size: 0.7rem;
-            opacity: 0.5;
-            z-index: 110;
-            letter-spacing: 1px;
+        /* Skill Bar Styles */
+        .skill-container { margin-bottom: 15px; width: 100%; }
+        .skill-label { display: flex; justify-content: space-between; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+        .skill-bar-bg { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; width: 100%; overflow: hidden; }
+        .skill-bar-fill { 
+            height: 100%; 
+            width: 0%; 
+            background: var(--spotify-green); 
+            border-radius: 5px;
+            transition: width 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67);
         }
+
+        .highlight { color: var(--spotify-green); font-weight: bold; }
+        .footer-hint { position: absolute; bottom: 30px; font-size: 0.7rem; opacity: 0.5; z-index: 110; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="wrapped-container">
-    <button class="btn-reset" onclick="resetWrapped(event)">
-        <span>↺</span> ULANGI
-    </button>
+    <button class="btn-reset" onclick="resetWrapped(event)"><span>↺</span> ULANGI</button>
 
     <div class="nav-overlay nav-left" onclick="prevSlide()"></div>
     <div class="nav-overlay nav-right" onclick="nextSlide()"></div>
 
     <div class="progress-container" id="progressBars">
+        <div class="bar"><div class="bar-inner"></div></div>
         <div class="bar"><div class="bar-inner"></div></div>
         <div class="bar"><div class="bar-inner"></div></div>
         <div class="bar"><div class="bar-inner"></div></div>
@@ -169,7 +170,6 @@
         <h1>2026<br>Wrapped</h1>
         <h2>Alika Audina Nadin</h2>
         <p>Lahir: 3 November 2007</p>
-        <p class="highlight">Sentuh sisi kanan layar →</p>
     </div>
 
     <div class="slide" id="slide1">
@@ -179,27 +179,39 @@
             <p>🎓 <strong>SMP (Lulus 2023)</strong></p>
             <p>🎓 <strong>SD (Lulus 2020)</strong></p>
         </div>
-        <p>Perjalanan akademik yang luar biasa!</p>
     </div>
 
     <div class="slide" id="slide2">
+        <h1 style="color: #509bf5;">Languages</h1>
+        <div class="stat-box">
+            <div class="skill-container">
+                <div class="skill-label"><span>Bahasa Indonesia</span><span>100%</span></div>
+                <div class="skill-bar-bg"><div class="skill-bar-fill" data-percent="100"></div></div>
+            </div>
+            <div class="skill-container">
+                <div class="skill-label"><span>Bahasa Sunda</span><span>100%</span></div>
+                <div class="skill-bar-bg"><div class="skill-bar-fill" data-percent="100"></div></div>
+            </div>
+        </div>
+        <p class="highlight" style="margin-top:15px">Komunikasi adalah kunci.</p>
+    </div>
+
+    <div class="slide" id="slide3">
         <h1 style="color: #ff5757;">Talenta</h1>
         <div class="stat-box">
             <p>💃 <strong>Seni:</strong> Nari Jaipong</p>
             <p>🏆 <strong>Sertifikat:</strong> Juara 3 Se-Jawa Barat</p>
             <p>🍳 <strong>Hobby:</strong> Memasak</p>
         </div>
-        <p class="highlight">Tradisi & Rasa dalam satu jiwa.</p>
     </div>
 
-    <div class="slide" id="slide3">
+    <div class="slide" id="slide4">
         <h1>Kontak</h1>
         <div class="stat-box">
-            <p>📍 <strong>Alamat:</strong> Lamajang Peuntas RT 03/05, Dayeuhkolot</p>
+            <p>📍 <strong>Alamat:</strong> Lamajang Peuntas, Dayeuhkolot</p>
             <p>📞 <strong>WA:</strong> 08953255935550</p>
             <p>📸 <strong>IG:</strong> @nadinnnn01</p>
         </div>
-        <p style="margin-top: 20px; font-style: italic; opacity: 0.8;">Terima kasih telah melihat!</p>
     </div>
 
     <div class="footer-hint">TAP KIRI UNTUK KEMBALI | TAP KANAN UNTUK LANJUT</div>
@@ -207,15 +219,26 @@
 
 <script>
     let currentSlide = 0;
-    const totalSlides = 4;
+    const totalSlides = 5;
     const slideDuration = 6000; 
     let progressInterval;
 
     function showSlide(index) {
         currentSlide = index;
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-        document.getElementById(`slide${index}`).classList.add('active');
+        const activeSlide = document.getElementById(`slide${index}`);
+        activeSlide.classList.add('active');
 
+        // Reset Skill Bars jika masuk ke slide bahasa
+        const fills = activeSlide.querySelectorAll('.skill-bar-fill');
+        fills.forEach(fill => {
+            fill.style.width = '0%';
+            setTimeout(() => {
+                fill.style.width = fill.getAttribute('data-percent') + '%';
+            }, 100);
+        });
+
+        // Update Progress Bar Atas
         const bars = document.querySelectorAll('.bar-inner');
         bars.forEach((bar, i) => {
             bar.style.transition = 'none';
@@ -233,28 +256,13 @@
 
         clearTimeout(progressInterval);
         progressInterval = setTimeout(() => {
-            if (currentSlide < totalSlides - 1) {
-                nextSlide();
-            }
+            if (currentSlide < totalSlides - 1) nextSlide();
         }, slideDuration);
     }
 
-    function nextSlide() {
-        if (currentSlide < totalSlides - 1) {
-            showSlide(currentSlide + 1);
-        }
-    }
-
-    function prevSlide() {
-        if (currentSlide > 0) {
-            showSlide(currentSlide - 1);
-        }
-    }
-
-    function resetWrapped(event) {
-        event.stopPropagation(); 
-        showSlide(0);
-    }
+    function nextSlide() { if (currentSlide < totalSlides - 1) showSlide(currentSlide + 1); }
+    function prevSlide() { if (currentSlide > 0) showSlide(currentSlide - 1); }
+    function resetWrapped(event) { event.stopPropagation(); showSlide(0); }
 
     window.onload = () => showSlide(0);
 </script>
