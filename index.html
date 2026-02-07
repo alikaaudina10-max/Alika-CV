@@ -19,9 +19,10 @@
             background-color: var(--spotify-black);
             color: white;
             overflow: hidden;
+            height: 100%;
+            user-select: none;
         }
 
-        /* Container Utama */
         .wrapped-container {
             width: 100vw;
             height: 100vh;
@@ -32,18 +33,30 @@
             position: relative;
         }
 
+        /* Navigasi Sentuh (Kiri & Kanan) */
+        .nav-overlay {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            z-index: 100;
+            cursor: pointer;
+        }
+        .nav-left { left: 0; }
+        .nav-right { right: 0; }
+
         /* Progress Bar Atas */
         .progress-container {
             position: absolute;
-            top: 20px;
+            top: 15px;
             display: flex;
             width: 90%;
             gap: 5px;
-            z-index: 10;
+            z-index: 110;
         }
 
         .bar {
-            height: 4px;
+            height: 3px;
             background: rgba(255, 255, 255, 0.3);
             flex-grow: 1;
             border-radius: 2px;
@@ -54,8 +67,29 @@
             height: 100%;
             background: white;
             width: 0%;
-            transition: width 0.1s linear;
         }
+
+        /* TOMBOL ULANGI - Pojok Kiri Atas */
+        .btn-reset {
+            position: absolute;
+            top: 35px; /* Di bawah progress bar */
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 150; /* Di atas segalanya */
+            backdrop-filter: blur(5px);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-reset:hover { background: rgba(255, 255, 255, 0.4); }
 
         /* Slide Content */
         .slide {
@@ -64,60 +98,65 @@
             max-width: 400px;
             text-align: center;
             display: none;
-            animation: fadeIn 0.5s ease-out;
+            animation: fadeIn 0.4s ease-out;
+            z-index: 5;
         }
 
-        .slide.active { display: block; }
+        .slide.active { display: flex; flex-direction: column; align-items: center; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
+            from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
         }
 
         .profile-img {
-            width: 180px;
-            height: 180px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
-            border: 5px solid var(--spotify-green);
+            border: 4px solid var(--spotify-green);
             object-fit: cover;
             margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        h1 { font-size: 2.5rem; margin-bottom: 10px; color: var(--spotify-green); }
-        h2 { font-size: 1.5rem; opacity: 0.9; }
-        p { font-size: 1rem; line-height: 1.5; margin: 5px 0; }
+        h1 { font-size: 2.2rem; margin-bottom: 10px; color: var(--spotify-green); line-height: 1.1; font-weight: 900; }
+        h2 { font-size: 1.4rem; opacity: 0.9; margin: 5px 0; }
+        p { font-size: 1rem; line-height: 1.4; margin: 8px 0; }
 
         .stat-box {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.6);
             padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
+            border-radius: 20px;
+            margin-top: 15px;
             text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .highlight { color: var(--spotify-green); font-weight: bold; }
 
-        /* Navigation Buttons */
-        .nav-btn {
+        .footer-hint {
             position: absolute;
-            bottom: 40px;
-            background: var(--spotify-green);
-            color: black;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+            bottom: 30px;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            z-index: 110;
+            letter-spacing: 1px;
         }
-
-        .nav-btn:hover { transform: scale(1.05); }
-
     </style>
 </head>
 <body>
 
 <div class="wrapped-container">
+    <button class="btn-reset" onclick="resetWrapped(event)">
+        <span>↺</span> ULANGI
+    </button>
+
+    <div class="nav-overlay nav-left" onclick="prevSlide()"></div>
+    <div class="nav-overlay nav-right" onclick="nextSlide()"></div>
+
     <div class="progress-container" id="progressBars">
         <div class="bar"><div class="bar-inner"></div></div>
         <div class="bar"><div class="bar-inner"></div></div>
@@ -126,93 +165,97 @@
     </div>
 
     <div class="slide active" id="slide0">
-        <img src="https://via.placeholder.com/180" alt="Alika Audina Nadin" class="profile-img">
-        <h1>2026</h1>
-        <h2>Wrapped: Alika Audina Nadin</h2>
+        <img src="https://via.placeholder.com/160" alt="Alika Audina Nadin" class="profile-img">
+        <h1>2026<br>Wrapped</h1>
+        <h2>Alika Audina Nadin</h2>
         <p>Lahir: 3 November 2007</p>
-        <p class="highlight">Mari intip perjalanan karir saya.</p>
+        <p class="highlight">Sentuh sisi kanan layar →</p>
     </div>
 
     <div class="slide" id="slide1">
-        <h1 style="color: #ffde59;">Top Education</h1>
+        <h1 style="color: #ffde59;">Edukasi</h1>
         <div class="stat-box">
-            <p><strong>SMA (Lulus 2026)</strong><br>Status: Fresh Graduate</p>
-            <p><strong>SMP (Lulus 2023)</strong></p>
-            <p><strong>SD (Lulus 2020)</strong></p>
+            <p>🎓 <strong>SMA (Lulus 2026)</strong></p>
+            <p>🎓 <strong>SMP (Lulus 2023)</strong></p>
+            <p>🎓 <strong>SD (Lulus 2020)</strong></p>
         </div>
+        <p>Perjalanan akademik yang luar biasa!</p>
     </div>
 
     <div class="slide" id="slide2">
-        <h1 style="color: #ff5757;">Top Skills</h1>
+        <h1 style="color: #ff5757;">Talenta</h1>
         <div class="stat-box">
-            <p>🎭 <strong>Seni:</strong> Nari Jaipong</p>
-            <p>🏆 <strong>Sertifikasi:</strong> Juara 3 Nari Jaipong Se-Jawa Barat</p>
-            <p>🍳 <strong>Hobby:</strong> Masak</p>
-            <p>🗣️ <strong>Bahasa:</strong> Indonesia (Native)</p>
+            <p>💃 <strong>Seni:</strong> Nari Jaipong</p>
+            <p>🏆 <strong>Sertifikat:</strong> Juara 3 Se-Jawa Barat</p>
+            <p>🍳 <strong>Hobby:</strong> Memasak</p>
         </div>
+        <p class="highlight">Tradisi & Rasa dalam satu jiwa.</p>
     </div>
 
     <div class="slide" id="slide3">
-        <h1>Let's Connect!</h1>
+        <h1>Kontak</h1>
         <div class="stat-box">
             <p>📍 <strong>Alamat:</strong> Lamajang Peuntas RT 03/05, Dayeuhkolot</p>
-            <p>📞 <strong>WhatsApp:</strong> 08953255935550</p>
-            <p>📸 <strong>Instagram:</strong> @nadinnnn01</p>
+            <p>📞 <strong>WA:</strong> 08953255935550</p>
+            <p>📸 <strong>IG:</strong> @nadinnnn01</p>
         </div>
-        <button class="nav-btn" onclick="resetWrapped()">Ulangi Wrapped</button>
+        <p style="margin-top: 20px; font-style: italic; opacity: 0.8;">Terima kasih telah melihat!</p>
     </div>
 
-    <button class="nav-btn" id="nextBtn" style="right: 20px; bottom: 20px;" onclick="nextSlide()">Next →</button>
+    <div class="footer-hint">TAP KIRI UNTUK KEMBALI | TAP KANAN UNTUK LANJUT</div>
 </div>
 
 <script>
     let currentSlide = 0;
     const totalSlides = 4;
-    const slideDuration = 5000; // 5 detik per slide
+    const slideDuration = 6000; 
     let progressInterval;
 
     function showSlide(index) {
+        currentSlide = index;
         document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
         document.getElementById(`slide${index}`).classList.add('active');
-        
-        // Update Progress Bar
+
         const bars = document.querySelectorAll('.bar-inner');
         bars.forEach((bar, i) => {
-            if (i < index) bar.style.width = '100%';
-            else if (i === index) startProgressBar(bar);
-            else bar.style.width = '0%';
-        });
-    }
-
-    function startProgressBar(bar) {
-        let width = 0;
-        clearInterval(progressInterval);
-        progressInterval = setInterval(() => {
-            if (width >= 100) {
-                clearInterval(progressInterval);
-                nextSlide();
+            bar.style.transition = 'none';
+            if (i < index) {
+                bar.style.width = '100%';
+            } else if (i === index) {
+                bar.style.width = '0%';
+                void bar.offsetWidth; 
+                bar.style.transition = `width ${slideDuration}ms linear`;
+                bar.style.width = '100%';
             } else {
-                width += 1; 
-                bar.style.width = width + '%';
+                bar.style.width = '0%';
             }
-        }, slideDuration / 100);
+        });
+
+        clearTimeout(progressInterval);
+        progressInterval = setTimeout(() => {
+            if (currentSlide < totalSlides - 1) {
+                nextSlide();
+            }
+        }, slideDuration);
     }
 
     function nextSlide() {
         if (currentSlide < totalSlides - 1) {
-            currentSlide++;
-            showSlide(currentSlide);
-        } else {
-            clearInterval(progressInterval);
+            showSlide(currentSlide + 1);
         }
     }
 
-    function resetWrapped() {
-        currentSlide = 0;
+    function prevSlide() {
+        if (currentSlide > 0) {
+            showSlide(currentSlide - 1);
+        }
+    }
+
+    function resetWrapped(event) {
+        event.stopPropagation(); 
         showSlide(0);
     }
 
-    // Mulai otomatis
     window.onload = () => showSlide(0);
 </script>
 
